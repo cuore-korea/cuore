@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
-import { Menu, X, Search, ShoppingBag } from 'lucide-react';
+import { Menu, X, Search, ShoppingBag, ChevronDown } from 'lucide-react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
+
+  const productCategories = [
+    { name: '스킨케어', href: '#skincare' },
+    { name: '헤어케어', href: '#haircare' },
+    { name: '바디케어', href: '#bodycare' },
+    { name: '메이크업', href: '#makeup' },
+    { name: '선케어', href: '#suncare' },
+    { name: '스페셜케어', href: '#specialcare' }
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
@@ -11,7 +21,7 @@ const Header = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <h1 className="text-2xl font-light text-gray-900 tracking-wide">
-              큐어 뷰티
+              CUORE
             </h1>
           </div>
 
@@ -20,9 +30,37 @@ const Header = () => {
             <a href="#home" className="text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
               홈
             </a>
-            <a href="#products" className="text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
-              제품
-            </a>
+            
+            {/* Products Dropdown */}
+            <div 
+              className="relative group"
+              onMouseEnter={() => setIsProductsDropdownOpen(true)}
+              onMouseLeave={() => setIsProductsDropdownOpen(false)}
+            >
+              <button className="flex items-center gap-1 text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
+                제품
+                <ChevronDown 
+                  size={16} 
+                  className={`transition-transform duration-200 ${isProductsDropdownOpen ? 'rotate-180' : ''}`} 
+                />
+              </button>
+              
+              {/* Dropdown Menu */}
+              <div className={`absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 transition-all duration-200 ${
+                isProductsDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
+              }`}>
+                {productCategories.map((category, index) => (
+                  <a
+                    key={index}
+                    href={category.href}
+                    className="block px-4 py-3 text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-colors duration-200 font-light"
+                  >
+                    {category.name}
+                  </a>
+                ))}
+              </div>
+            </div>
+
             <a href="#about" className="text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
               브랜드
             </a>
@@ -62,9 +100,23 @@ const Header = () => {
               <a href="#home" className="block px-3 py-2 text-gray-700 hover:text-rose-600 font-light">
                 홈
               </a>
-              <a href="#products" className="block px-3 py-2 text-gray-700 hover:text-rose-600 font-light">
-                제품
-              </a>
+              
+              {/* Mobile Products Section */}
+              <div className="px-3 py-2">
+                <div className="text-gray-700 font-light mb-2">제품</div>
+                <div className="pl-4 space-y-1">
+                  {productCategories.map((category, index) => (
+                    <a
+                      key={index}
+                      href={category.href}
+                      className="block py-1 text-sm text-gray-600 hover:text-rose-600 font-light"
+                    >
+                      {category.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
               <a href="#about" className="block px-3 py-2 text-gray-700 hover:text-rose-600 font-light">
                 브랜드
               </a>
