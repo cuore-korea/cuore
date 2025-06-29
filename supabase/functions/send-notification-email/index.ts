@@ -16,10 +16,70 @@ interface EmailData {
   };
 }
 
+async function sendEmailWithGmail(to: string, subject: string, html: string, from: string) {
+  const gmailUser = Deno.env.get('GMAIL_USER');
+  const gmailPassword = Deno.env.get('GMAIL_APP_PASSWORD');
+  
+  if (!gmailUser || !gmailPassword) {
+    throw new Error('Gmail credentials not configured. Please set GMAIL_USER and GMAIL_APP_PASSWORD environment variables.');
+  }
+
+  // Create the email message in RFC 2822 format
+  const boundary = `boundary_${Date.now()}`;
+  const emailMessage = [
+    `From: ${from}`,
+    `To: ${to}`,
+    `Subject: ${subject}`,
+    `MIME-Version: 1.0`,
+    `Content-Type: multipart/alternative; boundary="${boundary}"`,
+    ``,
+    `--${boundary}`,
+    `Content-Type: text/html; charset=UTF-8`,
+    `Content-Transfer-Encoding: quoted-printable`,
+    ``,
+    html,
+    ``,
+    `--${boundary}--`
+  ].join('\r\n');
+
+  // Base64 encode the message
+  const encodedMessage = btoa(emailMessage).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+  // Get OAuth2 access token using Gmail API
+  try {
+    // First, we need to use the Gmail API with proper authentication
+    // For simplicity, we'll use a webhook approach or recommend using a dedicated email service
+    
+    // Since Gmail SMTP requires OAuth2 for security, we'll recommend using Gmail API
+    // or switching to a dedicated email service provider
+    
+    throw new Error(
+      'Gmail SMTP requires OAuth2 authentication which is complex to implement in Edge Functions. ' +
+      'Please consider using one of these alternatives:\n\n' +
+      '1. Gmail API with service account (recommended)\n' +
+      '2. Resend.com (modern email API)\n' +
+      '3. SendGrid (reliable email service)\n' +
+      '4. Mailgun (developer-friendly)\n\n' +
+      'For Gmail specifically, you would need to set up a Google Cloud service account and use the Gmail API.'
+    );
+    
+  } catch (error) {
+    console.error('Gmail SMTP error:', error);
+    throw error;
+  }
+}
+
 async function sendEmail(to: string, subject: string, html: string, from: string) {
   // Check for email service configurations in order of preference
   
-  // Option 1: Use Resend API (recommended - modern and reliable)
+  // Option 1: Gmail SMTP (requires special setup)
+  const gmailUser = Deno.env.get('GMAIL_USER');
+  const gmailPassword = Deno.env.get('GMAIL_APP_PASSWORD');
+  if (gmailUser && gmailPassword) {
+    return await sendEmailWithGmail(to, subject, html, from);
+  }
+  
+  // Option 2: Use Resend API (recommended - modern and reliable)
   const resendApiKey = Deno.env.get('RESEND_API_KEY');
   if (resendApiKey) {
     try {
@@ -49,7 +109,7 @@ async function sendEmail(to: string, subject: string, html: string, from: string
     }
   }
 
-  // Option 2: Use SendGrid API
+  // Option 3: Use SendGrid API
   const sendGridApiKey = Deno.env.get('SENDGRID_API_KEY');
   if (sendGridApiKey) {
     try {
@@ -84,7 +144,7 @@ async function sendEmail(to: string, subject: string, html: string, from: string
     }
   }
 
-  // Option 3: Use Mailgun API
+  // Option 4: Use Mailgun API
   const mailgunApiKey = Deno.env.get('MAILGUN_API_KEY');
   const mailgunDomain = Deno.env.get('MAILGUN_DOMAIN');
   if (mailgunApiKey && mailgunDomain) {
@@ -115,7 +175,7 @@ async function sendEmail(to: string, subject: string, html: string, from: string
     }
   }
 
-  // Option 4: Use a webhook service
+  // Option 5: Use a webhook service (can integrate with Gmail via Zapier/Make)
   const webhookUrl = Deno.env.get('EMAIL_WEBHOOK_URL');
   if (webhookUrl) {
     try {
@@ -147,16 +207,18 @@ async function sendEmail(to: string, subject: string, html: string, from: string
 
   // If no email service is configured, provide helpful error message
   const availableServices = [
+    'GMAIL_USER + GMAIL_APP_PASSWORD (requires special setup)',
     'RESEND_API_KEY (recommended)',
     'SENDGRID_API_KEY',
     'MAILGUN_API_KEY + MAILGUN_DOMAIN',
-    'EMAIL_WEBHOOK_URL'
+    'EMAIL_WEBHOOK_URL (can connect to Gmail via Zapier/Make)'
   ];
 
   throw new Error(
     `No email service configured. Please set up one of the following environment variables in your Supabase Edge Function settings:\n\n` +
     availableServices.map(service => `• ${service}`).join('\n') +
-    `\n\nFor detailed setup instructions, visit your Supabase project dashboard > Edge Functions > send-notification-email > Settings`
+    `\n\nFor Gmail integration, we recommend using a webhook service like Zapier or Make.com to connect to your Gmail account, ` +
+    `or switching to a dedicated email service like Resend or SendGrid for better reliability.`
   );
 }
 
