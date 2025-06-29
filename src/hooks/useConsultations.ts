@@ -25,6 +25,19 @@ export const useConsultations = () => {
         .insert([data]);
 
       if (error) throw error;
+
+      // Send email notification
+      try {
+        await supabase.functions.invoke('send-notification-email', {
+          body: {
+            type: 'consultation',
+            data: data
+          }
+        });
+      } catch (emailError) {
+        console.error('Failed to send email notification:', emailError);
+        // Don't fail the entire operation if email fails
+      }
       
       return { success: true };
     } catch (err) {
