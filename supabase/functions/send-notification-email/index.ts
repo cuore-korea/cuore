@@ -16,100 +16,49 @@ interface EmailData {
   };
 }
 
-async function sendEmailWithGmail(to: string, subject: string, html: string, from: string) {
-  const gmailUser = Deno.env.get('GMAIL_USER');
-  const gmailPassword = Deno.env.get('GMAIL_APP_PASSWORD');
+async function sendEmailWithResend(to: string, subject: string, html: string, from: string) {
+  const resendApiKey = Deno.env.get('RESEND_API_KEY');
   
-  if (!gmailUser || !gmailPassword) {
-    throw new Error('Gmail credentials not configured. Please set GMAIL_USER and GMAIL_APP_PASSWORD environment variables.');
+  if (!resendApiKey) {
+    throw new Error('RESEND_API_KEY not configured');
   }
 
-  // Create the email message in RFC 2822 format
-  const boundary = `boundary_${Date.now()}`;
-  const emailMessage = [
-    `From: ${from}`,
-    `To: ${to}`,
-    `Subject: ${subject}`,
-    `MIME-Version: 1.0`,
-    `Content-Type: multipart/alternative; boundary="${boundary}"`,
-    ``,
-    `--${boundary}`,
-    `Content-Type: text/html; charset=UTF-8`,
-    `Content-Transfer-Encoding: quoted-printable`,
-    ``,
-    html,
-    ``,
-    `--${boundary}--`
-  ].join('\r\n');
-
-  // Base64 encode the message
-  const encodedMessage = btoa(emailMessage).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-
-  // Get OAuth2 access token using Gmail API
   try {
-    // First, we need to use the Gmail API with proper authentication
-    // For simplicity, we'll use a webhook approach or recommend using a dedicated email service
-    
-    // Since Gmail SMTP requires OAuth2 for security, we'll recommend using Gmail API
-    // or switching to a dedicated email service provider
-    
-    throw new Error(
-      'Gmail SMTP requires OAuth2 authentication which is complex to implement in Edge Functions. ' +
-      'Please consider using one of these alternatives:\n\n' +
-      '1. Gmail API with service account (recommended)\n' +
-      '2. Resend.com (modern email API)\n' +
-      '3. SendGrid (reliable email service)\n' +
-      '4. Mailgun (developer-friendly)\n\n' +
-      'For Gmail specifically, you would need to set up a Google Cloud service account and use the Gmail API.'
-    );
-    
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${resendApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: from,
+        to: [to],
+        subject: subject,
+        html: html
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Resend API error: ${response.status} - ${JSON.stringify(errorData)}`);
+    }
+
+    const result = await response.json();
+    return { success: true, method: 'resend', id: result.id };
   } catch (error) {
-    console.error('Gmail SMTP error:', error);
+    console.error('Resend error:', error);
     throw error;
   }
 }
 
 async function sendEmail(to: string, subject: string, html: string, from: string) {
-  // Check for email service configurations in order of preference
-  
-  // Option 1: Gmail SMTP (requires special setup)
-  const gmailUser = Deno.env.get('GMAIL_USER');
-  const gmailPassword = Deno.env.get('GMAIL_APP_PASSWORD');
-  if (gmailUser && gmailPassword) {
-    return await sendEmailWithGmail(to, subject, html, from);
-  }
-  
-  // Option 2: Use Resend API (recommended - modern and reliable)
+  // Primary method: Resend (recommended)
   const resendApiKey = Deno.env.get('RESEND_API_KEY');
   if (resendApiKey) {
-    try {
-      const response = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${resendApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: from,
-          to: [to],
-          subject: subject,
-          html: html
-        })
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Resend failed: ${response.statusText} - ${errorText}`);
-      }
-
-      return { success: true, method: 'resend' };
-    } catch (error) {
-      console.error('Resend error:', error);
-      throw error;
-    }
+    return await sendEmailWithResend(to, subject, html, from);
   }
 
-  // Option 3: Use SendGrid API
+  // Fallback: Use SendGrid API
   const sendGridApiKey = Deno.env.get('SENDGRID_API_KEY');
   if (sendGridApiKey) {
     try {
@@ -144,54 +93,21 @@ async function sendEmail(to: string, subject: string, html: string, from: string
     }
   }
 
-  // Option 4: Use Mailgun API
-  const mailgunApiKey = Deno.env.get('MAILGUN_API_KEY');
-  const mailgunDomain = Deno.env.get('MAILGUN_DOMAIN');
-  if (mailgunApiKey && mailgunDomain) {
-    try {
-      const formData = new FormData();
-      formData.append('from', from);
-      formData.append('to', to);
-      formData.append('subject', subject);
-      formData.append('html', html);
-
-      const response = await fetch(`https://api.mailgun.net/v3/${mailgunDomain}/messages`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Basic ${btoa(`api:${mailgunApiKey}`)}`,
-        },
-        body: formData
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Mailgun failed: ${response.statusText} - ${errorText}`);
-      }
-
-      return { success: true, method: 'mailgun' };
-    } catch (error) {
-      console.error('Mailgun error:', error);
-      throw error;
-    }
-  }
-
-  // Option 5: Use a webhook service (can integrate with Gmail via Zapier/Make)
+  // Fallback: Use webhook service
   const webhookUrl = Deno.env.get('EMAIL_WEBHOOK_URL');
   if (webhookUrl) {
     try {
-      const message = {
-        from: from,
-        to: to,
-        subject: subject,
-        html: html
-      };
-
       const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(message)
+        body: JSON.stringify({
+          from: from,
+          to: to,
+          subject: subject,
+          html: html
+        })
       });
       
       if (!response.ok) {
@@ -205,20 +121,16 @@ async function sendEmail(to: string, subject: string, html: string, from: string
     }
   }
 
-  // If no email service is configured, provide helpful error message
-  const availableServices = [
-    'GMAIL_USER + GMAIL_APP_PASSWORD (requires special setup)',
-    'RESEND_API_KEY (recommended)',
-    'SENDGRID_API_KEY',
-    'MAILGUN_API_KEY + MAILGUN_DOMAIN',
-    'EMAIL_WEBHOOK_URL (can connect to Gmail via Zapier/Make)'
-  ];
-
+  // If no email service is configured
   throw new Error(
-    `No email service configured. Please set up one of the following environment variables in your Supabase Edge Function settings:\n\n` +
-    availableServices.map(service => `• ${service}`).join('\n') +
-    `\n\nFor Gmail integration, we recommend using a webhook service like Zapier or Make.com to connect to your Gmail account, ` +
-    `or switching to a dedicated email service like Resend or SendGrid for better reliability.`
+    'No email service configured. Please set up one of the following environment variables:\n\n' +
+    '• RESEND_API_KEY (recommended - sign up at resend.com)\n' +
+    '• SENDGRID_API_KEY (alternative)\n' +
+    '• EMAIL_WEBHOOK_URL (webhook integration)\n\n' +
+    'For Resend setup:\n' +
+    '1. Go to https://resend.com and create an account\n' +
+    '2. Get your API key from the dashboard\n' +
+    '3. Add RESEND_API_KEY to your Supabase Edge Function environment variables'
   );
 }
 
@@ -240,120 +152,157 @@ Deno.serve(async (req) => {
     if (type === 'contact') {
       subject = `[CUORE] 새로운 문의: ${data.name}님으로부터`;
       htmlContent = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="background: linear-gradient(135deg, #e11d48, #ec4899); padding: 20px; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 24px;">CUORE 새로운 문의</h1>
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+          <div style="background: linear-gradient(135deg, #e11d48, #ec4899); padding: 30px 20px; text-align: center;">
+            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 300; letter-spacing: 2px;">CUORE</h1>
+            <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 16px;">새로운 문의가 도착했습니다</p>
           </div>
           
-          <div style="padding: 30px; background: #f9fafb;">
-            <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-              <h2 style="color: #1f2937; margin-bottom: 20px;">문의 정보</h2>
+          <div style="padding: 40px 30px; background: #f8fafc;">
+            <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+              <h2 style="color: #1f2937; margin: 0 0 24px 0; font-size: 20px; font-weight: 600;">문의 정보</h2>
               
-              <table style="width: 100%; border-collapse: collapse;">
+              <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
                 <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #374151;">이름:</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${data.name}</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151; width: 120px;">이름</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${data.name}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #374151;">이메일:</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${data.email}</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151;">이메일</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">
+                    <a href="mailto:${data.email}" style="color: #e11d48; text-decoration: none;">${data.email}</a>
+                  </td>
                 </tr>
                 ${data.phone ? `
                 <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #374151;">전화번호:</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${data.phone}</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151;">전화번호</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">
+                    <a href="tel:${data.phone}" style="color: #e11d48; text-decoration: none;">${data.phone}</a>
+                  </td>
                 </tr>
                 ` : ''}
                 ${data.service_type ? `
                 <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #374151;">관심 서비스:</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${data.service_type}</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151;">관심 서비스</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">
+                    <span style="background: #fef2f2; color: #dc2626; padding: 4px 12px; border-radius: 20px; font-size: 14px;">${data.service_type}</span>
+                  </td>
                 </tr>
                 ` : ''}
+                <tr>
+                  <td style="padding: 12px 0; font-weight: 600; color: #374151;">접수 시간</td>
+                  <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">${new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</td>
+                </tr>
               </table>
               
               ${data.message ? `
-              <div style="margin-top: 20px;">
-                <h3 style="color: #374151; margin-bottom: 10px;">메시지:</h3>
-                <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; color: #1f2937; line-height: 1.6;">
+              <div style="margin-top: 24px;">
+                <h3 style="color: #374151; margin: 0 0 12px 0; font-size: 16px; font-weight: 600;">메시지</h3>
+                <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border-left: 4px solid #e11d48; color: #1f2937; line-height: 1.6; font-size: 15px;">
                   ${data.message.replace(/\n/g, '<br>')}
                 </div>
               </div>
               ` : ''}
               
-              <div style="margin-top: 30px; text-align: center;">
+              <div style="margin-top: 32px; text-align: center; padding-top: 24px; border-top: 1px solid #e5e7eb;">
                 <a href="${Deno.env.get('SITE_URL') || 'http://localhost:5173'}/admin" 
-                   style="background: #e11d48; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;">
-                  관리자 대시보드에서 확인하기
+                   style="background: #e11d48; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 500; transition: background-color 0.2s;">
+                  관리자 대시보드에서 답변하기
                 </a>
               </div>
             </div>
           </div>
           
-          <div style="text-align: center; padding: 20px; color: #6b7280; font-size: 14px;">
-            <p>이 이메일은 CUORE 웹사이트에서 자동으로 발송되었습니다.</p>
+          <div style="text-align: center; padding: 24px; color: #6b7280; font-size: 14px; background: #f1f5f9;">
+            <p style="margin: 0;">이 이메일은 CUORE 웹사이트에서 자동으로 발송되었습니다.</p>
+            <p style="margin: 8px 0 0 0;">
+              <a href="${Deno.env.get('SITE_URL') || 'http://localhost:5173'}" style="color: #e11d48; text-decoration: none;">cuore-beauty.co.kr</a>
+            </p>
           </div>
         </div>
       `;
     } else if (type === 'consultation') {
-      subject = `[CUORE] 새로운 상담 예약: ${data.name}님`;
+      subject = `[CUORE] 새로운 상담 예약: ${data.name}님 (${data.preferred_date} ${data.preferred_time})`;
       htmlContent = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="background: linear-gradient(135deg, #e11d48, #ec4899); padding: 20px; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 24px;">CUORE 새로운 상담 예약</h1>
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+          <div style="background: linear-gradient(135deg, #e11d48, #ec4899); padding: 30px 20px; text-align: center;">
+            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 300; letter-spacing: 2px;">CUORE</h1>
+            <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 16px;">새로운 상담 예약이 접수되었습니다</p>
           </div>
           
-          <div style="padding: 30px; background: #f9fafb;">
-            <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-              <h2 style="color: #1f2937; margin-bottom: 20px;">예약 정보</h2>
+          <div style="padding: 40px 30px; background: #f8fafc;">
+            <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+              <div style="background: #fef3c7; border: 1px solid #f59e0b; padding: 16px; border-radius: 8px; margin-bottom: 24px; text-align: center;">
+                <h2 style="color: #92400e; margin: 0; font-size: 18px; font-weight: 600;">🗓️ ${data.preferred_date} ${data.preferred_time}</h2>
+                <p style="color: #b45309; margin: 4px 0 0 0; font-size: 14px;">예약 확정을 위해 고객에게 연락해주세요</p>
+              </div>
               
-              <table style="width: 100%; border-collapse: collapse;">
+              <h3 style="color: #1f2937; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">예약 정보</h3>
+              
+              <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
                 <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #374151;">이름:</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${data.name}</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151; width: 120px;">이름</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${data.name}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #374151;">전화번호:</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${data.phone}</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151;">전화번호</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">
+                    <a href="tel:${data.phone}" style="color: #e11d48; text-decoration: none; font-weight: 600;">${data.phone}</a>
+                  </td>
                 </tr>
                 <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #374151;">이메일:</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${data.email}</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151;">이메일</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">
+                    <a href="mailto:${data.email}" style="color: #e11d48; text-decoration: none;">${data.email}</a>
+                  </td>
                 </tr>
                 <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #374151;">서비스:</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${data.service_type}</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151;">서비스</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">
+                    <span style="background: #fef2f2; color: #dc2626; padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 500;">${data.service_type}</span>
+                  </td>
                 </tr>
                 <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #374151;">희망 날짜:</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${data.preferred_date}</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151;">희망 날짜</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937; font-weight: 600;">${data.preferred_date}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #374151;">희망 시간:</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${data.preferred_time}</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151;">희망 시간</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: #1f2937; font-weight: 600;">${data.preferred_time}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; font-weight: 600; color: #374151;">접수 시간</td>
+                  <td style="padding: 12px 0; color: #6b7280; font-size: 14px;">${new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</td>
                 </tr>
               </table>
               
               ${data.message ? `
-              <div style="margin-top: 20px;">
-                <h3 style="color: #374151; margin-bottom: 10px;">추가 메시지:</h3>
-                <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; color: #1f2937; line-height: 1.6;">
+              <div style="margin-top: 24px;">
+                <h3 style="color: #374151; margin: 0 0 12px 0; font-size: 16px; font-weight: 600;">추가 메시지</h3>
+                <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border-left: 4px solid #e11d48; color: #1f2937; line-height: 1.6; font-size: 15px;">
                   ${data.message.replace(/\n/g, '<br>')}
                 </div>
               </div>
               ` : ''}
               
-              <div style="margin-top: 30px; text-align: center;">
+              <div style="margin-top: 32px; text-align: center; padding-top: 24px; border-top: 1px solid #e5e7eb;">
                 <a href="${Deno.env.get('SITE_URL') || 'http://localhost:5173'}/admin" 
-                   style="background: #e11d48; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;">
-                  관리자 대시보드에서 확인하기
+                   style="background: #e11d48; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 500; margin-right: 12px;">
+                  예약 관리하기
+                </a>
+                <a href="tel:${data.phone}" 
+                   style="background: #10b981; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 500;">
+                  📞 고객에게 전화하기
                 </a>
               </div>
             </div>
           </div>
           
-          <div style="text-align: center; padding: 20px; color: #6b7280; font-size: 14px;">
-            <p>이 이메일은 CUORE 웹사이트에서 자동으로 발송되었습니다.</p>
+          <div style="text-align: center; padding: 24px; color: #6b7280; font-size: 14px; background: #f1f5f9;">
+            <p style="margin: 0;">이 이메일은 CUORE 웹사이트에서 자동으로 발송되었습니다.</p>
+            <p style="margin: 8px 0 0 0;">
+              <a href="${Deno.env.get('SITE_URL') || 'http://localhost:5173'}" style="color: #e11d48; text-decoration: none;">cuore-beauty.co.kr</a>
+            </p>
           </div>
         </div>
       `;
@@ -366,7 +315,8 @@ Deno.serve(async (req) => {
       JSON.stringify({ 
         success: true, 
         message: 'Notification sent successfully',
-        method: result.method
+        method: result.method,
+        id: result.id || null
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
