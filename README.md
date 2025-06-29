@@ -52,20 +52,53 @@ The system includes automatic email notifications for:
 
 ### Setting up Email Notifications
 
-1. In your Supabase project, go to Edge Functions
-2. The `send-notification-email` function is already deployed
-3. Set up environment variables in Supabase:
-   - `SMTP_HOST`: Your SMTP server (default: smtp.gmail.com)
-   - `SMTP_PORT`: SMTP port (default: 587)
-   - `SMTP_USER`: Your email address
-   - `SMTP_PASS`: Your email app password
-   - `ADMIN_EMAIL`: Email to receive notifications
-   - `SITE_URL`: Your website URL
+The email function supports multiple email service providers. Choose one of the following options:
 
-### For Gmail:
-1. Enable 2-factor authentication
-2. Generate an app password
-3. Use the app password as `SMTP_PASS`
+#### Option 1: Resend (Recommended)
+Resend is a modern email API that's reliable and easy to set up.
+
+1. Sign up at [resend.com](https://resend.com)
+2. Get your API key from the dashboard
+3. In your Supabase project, go to **Edge Functions** → **send-notification-email** → **Settings**
+4. Add environment variable:
+   - `RESEND_API_KEY`: Your Resend API key
+
+#### Option 2: SendGrid
+1. Sign up at [sendgrid.com](https://sendgrid.com)
+2. Create an API key with mail send permissions
+3. In Supabase Edge Function settings, add:
+   - `SENDGRID_API_KEY`: Your SendGrid API key
+
+#### Option 3: Mailgun
+1. Sign up at [mailgun.com](https://mailgun.com)
+2. Get your API key and domain
+3. In Supabase Edge Function settings, add:
+   - `MAILGUN_API_KEY`: Your Mailgun API key
+   - `MAILGUN_DOMAIN`: Your Mailgun domain
+
+#### Option 4: Webhook Service
+If you prefer to use a webhook service like Zapier, Make.com, or n8n:
+1. Set up a webhook that accepts POST requests with email data
+2. In Supabase Edge Function settings, add:
+   - `EMAIL_WEBHOOK_URL`: Your webhook URL
+
+### Additional Configuration
+
+Set these optional environment variables in your Supabase Edge Function:
+- `ADMIN_EMAIL`: Email address to receive notifications (default: admin@cuore-beauty.co.kr)
+- `FROM_EMAIL`: Email address to send from (default: noreply@cuore-beauty.co.kr)
+- `SITE_URL`: Your website URL for admin dashboard links
+
+### How to Configure Environment Variables in Supabase
+
+1. Go to your Supabase project dashboard
+2. Navigate to **Edge Functions** in the sidebar
+3. Click on **send-notification-email**
+4. Go to the **Settings** tab
+5. Add your environment variables in the **Environment Variables** section
+6. Save the changes
+
+The function will automatically use the first available email service based on the environment variables you've configured.
 
 ## Database Schema
 
@@ -86,7 +119,7 @@ All tables have Row Level Security (RLS) enabled with appropriate policies.
 
 2. Deploy to your preferred hosting platform
 3. Set up your Supabase environment variables
-4. Configure email settings in Supabase
+4. Configure email settings in Supabase Edge Functions
 
 ## Tech Stack
 

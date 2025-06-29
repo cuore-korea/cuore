@@ -1,5 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -18,107 +16,13 @@ interface EmailData {
   };
 }
 
-// Simple SMTP client using fetch to a mail service
 async function sendEmail(to: string, subject: string, html: string, from: string) {
-  const SMTP_HOST = Deno.env.get('SMTP_HOST') || 'smtp.gmail.com'
-  const SMTP_PORT = parseInt(Deno.env.get('SMTP_PORT') || '587')
-  const SMTP_USER = Deno.env.get('SMTP_USER')
-  const SMTP_PASS = Deno.env.get('SMTP_PASS')
-
-  if (!SMTP_USER || !SMTP_PASS) {
-    throw new Error('SMTP credentials not configured')
-  }
-
-  // For Gmail SMTP, we'll use a simple approach with nodemailer-like functionality
-  // In production, consider using services like SendGrid, Mailgun, or AWS SES
+  // Check for email service configurations in order of preference
   
-  try {
-    // Create the email message
-    const message = {
-      from: from,
-      to: to,
-      subject: subject,
-      html: html
-    };
-
-    // For demonstration, we'll use a webhook approach or direct SMTP
-    // You can replace this with your preferred email service API
-    
-    // Option 1: Use a webhook service like Zapier, Make.com, or n8n
-    const webhookUrl = Deno.env.get('EMAIL_WEBHOOK_URL');
-    if (webhookUrl) {
-      const response = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(message)
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Webhook failed: ${response.statusText}`);
-      }
-      
-      return { success: true, method: 'webhook' };
-    }
-
-    // Option 2: Use SendGrid API (if you have SendGrid API key)
-    const sendGridApiKey = Deno.env.get('SENDGRID_API_KEY');
-    if (sendGridApiKey) {
-      const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${sendGridApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          personalizations: [{
-            to: [{ email: to }],
-            subject: subject
-          }],
-          from: { email: from },
-          content: [{
-            type: 'text/html',
-            value: html
-          }]
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`SendGrid failed: ${response.statusText}`);
-      }
-
-      return { success: true, method: 'sendgrid' };
-    }
-
-    // Option 3: Use Mailgun API (if you have Mailgun API key)
-    const mailgunApiKey = Deno.env.get('MAILGUN_API_KEY');
-    const mailgunDomain = Deno.env.get('MAILGUN_DOMAIN');
-    if (mailgunApiKey && mailgunDomain) {
-      const formData = new FormData();
-      formData.append('from', from);
-      formData.append('to', to);
-      formData.append('subject', subject);
-      formData.append('html', html);
-
-      const response = await fetch(`https://api.mailgun.net/v3/${mailgunDomain}/messages`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Basic ${btoa(`api:${mailgunApiKey}`)}`,
-        },
-        body: formData
-      });
-
-      if (!response.ok) {
-        throw new Error(`Mailgun failed: ${response.statusText}`);
-      }
-
-      return { success: true, method: 'mailgun' };
-    }
-
-    // Option 4: Use Resend API (modern email service)
-    const resendApiKey = Deno.env.get('RESEND_API_KEY');
-    if (resendApiKey) {
+  // Option 1: Use Resend API (recommended - modern and reliable)
+  const resendApiKey = Deno.env.get('RESEND_API_KEY');
+  if (resendApiKey) {
+    try {
       const response = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -139,19 +43,124 @@ async function sendEmail(to: string, subject: string, html: string, from: string
       }
 
       return { success: true, method: 'resend' };
+    } catch (error) {
+      console.error('Resend error:', error);
+      throw error;
     }
-
-    // If no email service is configured, just log the email
-    console.log('No email service configured. Email would be sent:', { to, subject, from });
-    return { success: true, method: 'console', message: 'Email logged to console (no service configured)' };
-
-  } catch (error) {
-    console.error('Email sending error:', error);
-    throw error;
   }
+
+  // Option 2: Use SendGrid API
+  const sendGridApiKey = Deno.env.get('SENDGRID_API_KEY');
+  if (sendGridApiKey) {
+    try {
+      const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${sendGridApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          personalizations: [{
+            to: [{ email: to }],
+            subject: subject
+          }],
+          from: { email: from },
+          content: [{
+            type: 'text/html',
+            value: html
+          }]
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`SendGrid failed: ${response.statusText} - ${errorText}`);
+      }
+
+      return { success: true, method: 'sendgrid' };
+    } catch (error) {
+      console.error('SendGrid error:', error);
+      throw error;
+    }
+  }
+
+  // Option 3: Use Mailgun API
+  const mailgunApiKey = Deno.env.get('MAILGUN_API_KEY');
+  const mailgunDomain = Deno.env.get('MAILGUN_DOMAIN');
+  if (mailgunApiKey && mailgunDomain) {
+    try {
+      const formData = new FormData();
+      formData.append('from', from);
+      formData.append('to', to);
+      formData.append('subject', subject);
+      formData.append('html', html);
+
+      const response = await fetch(`https://api.mailgun.net/v3/${mailgunDomain}/messages`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${btoa(`api:${mailgunApiKey}`)}`,
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Mailgun failed: ${response.statusText} - ${errorText}`);
+      }
+
+      return { success: true, method: 'mailgun' };
+    } catch (error) {
+      console.error('Mailgun error:', error);
+      throw error;
+    }
+  }
+
+  // Option 4: Use a webhook service
+  const webhookUrl = Deno.env.get('EMAIL_WEBHOOK_URL');
+  if (webhookUrl) {
+    try {
+      const message = {
+        from: from,
+        to: to,
+        subject: subject,
+        html: html
+      };
+
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(message)
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Webhook failed: ${response.statusText}`);
+      }
+      
+      return { success: true, method: 'webhook' };
+    } catch (error) {
+      console.error('Webhook error:', error);
+      throw error;
+    }
+  }
+
+  // If no email service is configured, provide helpful error message
+  const availableServices = [
+    'RESEND_API_KEY (recommended)',
+    'SENDGRID_API_KEY',
+    'MAILGUN_API_KEY + MAILGUN_DOMAIN',
+    'EMAIL_WEBHOOK_URL'
+  ];
+
+  throw new Error(
+    `No email service configured. Please set up one of the following environment variables in your Supabase Edge Function settings:\n\n` +
+    availableServices.map(service => `• ${service}`).join('\n') +
+    `\n\nFor detailed setup instructions, visit your Supabase project dashboard > Edge Functions > send-notification-email > Settings`
+  );
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -160,7 +169,7 @@ serve(async (req) => {
     const { type, data }: EmailData = await req.json()
 
     const ADMIN_EMAIL = Deno.env.get('ADMIN_EMAIL') || 'admin@cuore-beauty.co.kr'
-    const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || Deno.env.get('SMTP_USER') || 'noreply@cuore-beauty.co.kr'
+    const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'noreply@cuore-beauty.co.kr'
 
     // Create email content based on type
     let subject = '';
@@ -295,8 +304,7 @@ serve(async (req) => {
       JSON.stringify({ 
         success: true, 
         message: 'Notification sent successfully',
-        method: result.method,
-        details: result.message || 'Email sent'
+        method: result.method
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
