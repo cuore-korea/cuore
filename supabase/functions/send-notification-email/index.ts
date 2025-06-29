@@ -16,7 +16,7 @@ interface EmailData {
   };
 }
 
-async function sendEmailWithResend(to: string, subject: string, html: string, from: string) {
+async function sendEmailWithResend(to: string, subject: string, html: string, from: string, replyTo?: string) {
   const resendApiKey = Deno.env.get('RESEND_API_KEY');
   
   if (!resendApiKey) {
@@ -24,18 +24,25 @@ async function sendEmailWithResend(to: string, subject: string, html: string, fr
   }
 
   try {
+    const emailPayload: any = {
+      from: from,
+      to: [to],
+      subject: subject,
+      html: html
+    };
+
+    // Add reply-to if specified
+    if (replyTo) {
+      emailPayload.reply_to = [replyTo];
+    }
+
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${resendApiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        from: from,
-        to: [to],
-        subject: subject,
-        html: html
-      })
+      body: JSON.stringify(emailPayload)
     });
 
     if (!response.ok) {
@@ -51,34 +58,41 @@ async function sendEmailWithResend(to: string, subject: string, html: string, fr
   }
 }
 
-async function sendEmail(to: string, subject: string, html: string, from: string) {
+async function sendEmail(to: string, subject: string, html: string, from: string, replyTo?: string) {
   // Primary method: Resend (recommended)
   const resendApiKey = Deno.env.get('RESEND_API_KEY');
   if (resendApiKey) {
-    return await sendEmailWithResend(to, subject, html, from);
+    return await sendEmailWithResend(to, subject, html, from, replyTo);
   }
 
   // Fallback: Use SendGrid API
   const sendGridApiKey = Deno.env.get('SENDGRID_API_KEY');
   if (sendGridApiKey) {
     try {
+      const emailPayload: any = {
+        personalizations: [{
+          to: [{ email: to }],
+          subject: subject
+        }],
+        from: { email: from },
+        content: [{
+          type: 'text/html',
+          value: html
+        }]
+      };
+
+      // Add reply-to if specified
+      if (replyTo) {
+        emailPayload.reply_to = { email: replyTo };
+      }
+
       const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${sendGridApiKey}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          personalizations: [{
-            to: [{ email: to }],
-            subject: subject
-          }],
-          from: { email: from },
-          content: [{
-            type: 'text/html',
-            value: html
-          }]
-        })
+        body: JSON.stringify(emailPayload)
       });
 
       if (!response.ok) {
@@ -106,7 +120,8 @@ async function sendEmail(to: string, subject: string, html: string, from: string
           from: from,
           to: to,
           subject: subject,
-          html: html
+          html: html,
+          reply_to: replyTo
         })
       });
       
@@ -145,6 +160,8 @@ Deno.serve(async (req) => {
     const ADMIN_EMAIL = Deno.env.get('ADMIN_EMAIL') || 'admin@cuore-beauty.co.kr'
     // Use Resend's pre-verified domain for development when no custom domain is set
     const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'onboarding@resend.dev'
+    // Optional: Set your Gmail as reply-to address
+    const REPLY_TO_EMAIL = Deno.env.get('REPLY_TO_EMAIL') // e.g., 'your-email@gmail.com'
 
     // Create email content based on type
     let subject = '';
@@ -219,6 +236,7 @@ Deno.serve(async (req) => {
             <p style="margin: 8px 0 0 0;">
               <a href="${Deno.env.get('SITE_URL') || 'http://localhost:5173'}" style="color: #e11d48; text-decoration: none;">cuore-beauty.co.kr</a>
             </p>
+            ${REPLY_TO_EMAIL ? `<p style="margin: 8px 0 0 0; font-size: 12px;">답장은 ${REPLY_TO_EMAIL}로 전송됩니다.</p>` : ''}
           </div>
         </div>
       `;
@@ -304,13 +322,14 @@ Deno.serve(async (req) => {
             <p style="margin: 8px 0 0 0;">
               <a href="${Deno.env.get('SITE_URL') || 'http://localhost:5173'}" style="color: #e11d48; text-decoration: none;">cuore-beauty.co.kr</a>
             </p>
+            ${REPLY_TO_EMAIL ? `<p style="margin: 8px 0 0 0; font-size: 12px;">답장은 ${REPLY_TO_EMAIL}로 전송됩니다.</p>` : ''}
           </div>
         </div>
       `;
     }
 
     // Send the email
-    const result = await sendEmail(ADMIN_EMAIL, subject, htmlContent, FROM_EMAIL);
+    const result = await sendEmail(ADMIN_EMAIL, subject, htmlContent, FROM_EMAIL, REPLY_TO_EMAIL);
 
     return new Response(
       JSON.stringify({ 
