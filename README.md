@@ -62,9 +62,9 @@ The system sends automatic email notifications for new contact messages and cons
    - Click **Create API Key**
    - Copy the API key (starts with `re_`)
 
-3. **Add domain (optional but recommended):**
+3. **Add domain (optional but recommended for production):**
    - In Resend dashboard, go to **Domains**
-   - Add your domain (e.g., `cuore-beauty.co.kr`)
+   - Add your domain (e.g., `yourdomain.com`)
    - Follow DNS verification steps
    - This allows you to send from `noreply@yourdomain.com`
 
@@ -75,8 +75,8 @@ The system sends automatic email notifications for new contact messages and cons
    - Add these environment variables:
      - `RESEND_API_KEY`: Your Resend API key
      - `ADMIN_EMAIL`: Your email address to receive notifications
-     - `FROM_EMAIL`: Email to send from (e.g., `noreply@cuore-beauty.co.kr`)
-     - `SITE_URL`: Your website URL (e.g., `https://cuore-beauty.co.kr`)
+     - `FROM_EMAIL`: Email to send from (use `onboarding@resend.dev` for development)
+     - `SITE_URL`: Your website URL (e.g., `https://yourdomain.com`)
 
 ### Environment Variables
 
@@ -85,9 +85,9 @@ Set these in your Supabase Edge Function settings:
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `RESEND_API_KEY` | Your Resend API key | `re_123abc...` |
-| `ADMIN_EMAIL` | Email to receive notifications | `admin@cuore-beauty.co.kr` |
-| `FROM_EMAIL` | Email to send from | `noreply@cuore-beauty.co.kr` |
-| `SITE_URL` | Your website URL | `https://cuore-beauty.co.kr` |
+| `ADMIN_EMAIL` | Email to receive notifications | `admin@yourdomain.com` |
+| `FROM_EMAIL` | Email to send from | `onboarding@resend.dev` (development) or `noreply@yourdomain.com` (production) |
+| `SITE_URL` | Your website URL | `https://yourdomain.com` |
 
 ### How to Configure Environment Variables in Supabase
 
@@ -99,9 +99,21 @@ Set these in your Supabase Edge Function settings:
 6. Click **Add variable** for each one:
    - Name: `RESEND_API_KEY`, Value: `your_api_key_here`
    - Name: `ADMIN_EMAIL`, Value: `your_email@domain.com`
-   - Name: `FROM_EMAIL`, Value: `noreply@yourdomain.com`
+   - Name: `FROM_EMAIL`, Value: `onboarding@resend.dev` (for development)
    - Name: `SITE_URL`, Value: `https://yourdomain.com`
 7. Save the changes
+
+### Development vs Production Email Setup
+
+**For Development:**
+- Use `FROM_EMAIL`: `onboarding@resend.dev` (pre-verified by Resend)
+- No domain verification required
+- Perfect for testing
+
+**For Production:**
+- Add and verify your own domain in Resend dashboard
+- Use `FROM_EMAIL`: `noreply@yourdomain.com`
+- Professional appearance for customers
 
 ### Testing Email Notifications
 
@@ -161,6 +173,7 @@ All tables have Row Level Security (RLS) enabled with appropriate policies.
 2. Verify all environment variables are set correctly
 3. Ensure your Resend API key is valid
 4. Check your Resend dashboard for delivery status
+5. **Domain verification error?** Use `onboarding@resend.dev` as `FROM_EMAIL` for development
 
 ### Admin login not working?
 

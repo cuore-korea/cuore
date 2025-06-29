@@ -143,7 +143,8 @@ Deno.serve(async (req) => {
     const { type, data }: EmailData = await req.json()
 
     const ADMIN_EMAIL = Deno.env.get('ADMIN_EMAIL') || 'admin@cuore-beauty.co.kr'
-    const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'noreply@cuore-beauty.co.kr'
+    // Use Resend's pre-verified domain for development when no custom domain is set
+    const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'onboarding@resend.dev'
 
     // Create email content based on type
     let subject = '';
