@@ -1,6 +1,6 @@
 import React from 'react';
 import { Clock, Star, Users, Sparkles } from 'lucide-react';
-import ConsultationBooking from './ConsultationBooking';
+import ConsultationBookingStatic from './ConsultationBookingStatic';
 
 const Services = () => {
   const services = [
@@ -120,7 +120,7 @@ const Services = () => {
 
         {/* Consultation Booking Form */}
         <div className="mb-16">
-          <ConsultationBooking />
+          <ConsultationBookingStatic />
         </div>
 
         {/* CTA Section */}
