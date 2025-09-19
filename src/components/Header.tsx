@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Search, ShoppingBag, ChevronDown } from 'lucide-react';
-import logo from '../assets/logo_cuore.png';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,7 +29,7 @@ const Header = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/">
-              <img src={logo} alt="CUORE" className="h-8 w-auto" />
+              <div className="text-2xl font-light text-rose-600">큐어 뷰티</div>
             </Link>
           </div>
 
