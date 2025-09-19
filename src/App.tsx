@@ -1,24 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import Header from './components/Header';
-import Hero from './components/Hero';
-import ProductsStatic from './components/ProductsStatic';
-import About from './components/About';
-import Services from './components/Services';
-import ContactStatic from './components/ContactStatic';
-import Footer from './components/Footer';
+import ProductsPage from './pages/Products';
+import HomePage from './pages/HomePage';
 
-function App() {
+const ScrollToAnchor = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.getElementById(location.hash.substring(1));
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location]);
+
+  return null;
+};
+
+const App = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <Router>
       <Header />
-      <Hero />
-      <ProductsStatic />
-      <About />
-      <Services />
-      <ContactStatic />
-      <Footer />
-    </div>
+      <ScrollToAnchor />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/products" element={<ProductsPage />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;

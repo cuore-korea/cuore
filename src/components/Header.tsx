@@ -1,17 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Search, ShoppingBag, ChevronDown } from 'lucide-react';
+import logo from '../assets/logo_cuore.png';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location]);
 
   const productCategories = [
-    { name: '스킨케어', href: '#skincare' },
-    { name: '헤어케어', href: '#haircare' },
-    { name: '바디케어', href: '#bodycare' },
-    { name: '메이크업', href: '#makeup' },
-    { name: '선케어', href: '#suncare' },
-    { name: '스페셜케어', href: '#specialcare' }
+    { name: '스킨케어', path: '/products#skincare' },
+    { name: '헤어케어', path: '/products#haircare' },
   ];
 
   return (
@@ -20,16 +29,16 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-light text-gray-900 tracking-wide">
-              CUORE
-            </h1>
+            <Link to="/">
+              <img src={logo} alt="CUORE" className="h-8 w-auto" />
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#home" className="text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
+            <Link to="/" className="text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
               홈
-            </a>
+            </Link>
             
             {/* Products Dropdown */}
             <div 
@@ -37,37 +46,36 @@ const Header = () => {
               onMouseEnter={() => setIsProductsDropdownOpen(true)}
               onMouseLeave={() => setIsProductsDropdownOpen(false)}
             >
-              <button className="flex items-center gap-1 text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
-                제품
-                <ChevronDown 
-                  size={16} 
-                  className={`transition-transform duration-200 ${isProductsDropdownOpen ? 'rotate-180' : ''}`} 
-                />
-              </button>
+                <Link to="/products" className="flex items-center gap-1 text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
+                    제품
+                    <ChevronDown 
+                    size={16} 
+                    className={`transition-transform duration-200 ${isProductsDropdownOpen ? 'rotate-180' : ''}`} 
+                    />
+                </Link>
               
-              {/* Dropdown Menu */}
               <div className={`absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 transition-all duration-200 ${
                 isProductsDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
               }`}>
                 {productCategories.map((category, index) => (
-                  <a
+                  <Link
                     key={index}
-                    href={category.href}
+                    to={category.path}
                     className="block px-4 py-3 text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-colors duration-200 font-light"
                   >
                     {category.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
 
-            <a href="#about" className="text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
+            <a href="/#about" className="text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
               브랜드
             </a>
-            <a href="#services" className="text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
+            <a href="/#services" className="text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
               서비스
             </a>
-            <a href="#contact" className="text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
+            <a href="/#contact" className="text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
               연락처
             </a>
           </nav>
@@ -97,33 +105,33 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden border-t border-gray-100">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white">
-              <a href="#home" className="block px-3 py-2 text-gray-700 hover:text-rose-600 font-light">
+              <Link to="/" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-rose-600 font-light">
                 홈
-              </a>
+              </Link>
               
-              {/* Mobile Products Section */}
               <div className="px-3 py-2">
-                <div className="text-gray-700 font-light mb-2">제품</div>
+                <Link to="/products" onClick={() => setIsMenuOpen(false)} className="text-gray-700 font-light mb-2">제품</Link>
                 <div className="pl-4 space-y-1">
                   {productCategories.map((category, index) => (
-                    <a
+                    <Link
                       key={index}
-                      href={category.href}
+                      to={category.path}
+                      onClick={() => setIsMenuOpen(false)}
                       className="block py-1 text-sm text-gray-600 hover:text-rose-600 font-light"
                     >
                       {category.name}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
 
-              <a href="#about" className="block px-3 py-2 text-gray-700 hover:text-rose-600 font-light">
+              <a href="/#about" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-rose-600 font-light">
                 브랜드
               </a>
-              <a href="#services" className="block px-3 py-2 text-gray-700 hover:text-rose-600 font-light">
+              <a href="/#services" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-rose-600 font-light">
                 서비스
               </a>
-              <a href="#contact" className="block px-3 py-2 text-gray-700 hover:text-rose-600 font-light">
+              <a href="/#contact" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-rose-600 font-light">
                 연락처
               </a>
             </div>
