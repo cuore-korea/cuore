@@ -1,6 +1,6 @@
-
 import React from 'react';
 import Footer from '../components/Footer';
+import * as assets from '../assets';
 
 const products = [
   // 헤어케어
@@ -69,7 +69,7 @@ const ProductsPage = () => {
                 <div className="flex justify-center mb-6">
                     <img
                         className="h-auto"
-                        src="https://cuore-beauty.co.jp/products/img/series/logo_axi.png"
+                        src={assets.logoAxi}
                         alt="AXI"
                         style={{ height: '80px' }}
                     />
@@ -88,10 +88,10 @@ const ProductsPage = () => {
                  <picture>
                     <source
                         media="(min-width: 768px)"
-                        srcSet="https://cuore-beauty.co.jp/products/img/series/main_axi.png"
+                        srcSet={assets.mainAxi}
                     />
                     <img
-                        src="https://cuore-beauty.co.jp/products/img/series/main_axi_sp.png"
+                        src={assets.mainAxiSp}
                         alt="AXI main visual"
                         className="w-full h-auto"
                     />
