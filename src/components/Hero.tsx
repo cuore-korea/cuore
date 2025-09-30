@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, FlaskConical, Sparkles, ShieldCheck } from 'lucide-react';
 
 const Hero = () => {
   return (
@@ -19,7 +19,7 @@ const Hero = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-600 mb-8 font-light max-w-2xl mx-auto leading-relaxed">
-            꾸오레는 미용실 전매를 목적으로 한 기노시다제약에서 제조되는 화장품 메이커입니다.
+            꾸오레는 미용실 전매를 목적으로 한 <a href="https://cuore-beauty.co.jp/kinoshita/" target="_blank" rel="noopener noreferrer" className="text-rose-600 hover:underline">기노시다제약</a>에서 제조되는 화장품 메이커입니다.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
@@ -37,30 +37,39 @@ const Hero = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
             <div className="text-center group">
               <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-rose-200 transition-colors duration-300">
-                <div className="w-8 h-8 bg-rose-600 rounded-full"></div>
+                <FlaskConical size={32} className="text-rose-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">연구개발</h3>
-              <p className="text-gray-600 font-light">
-                <a href="https://cuore-beauty.co.jp/kinoshita/" target="_blank" rel="noopener noreferrer">
-                  Kinoshita Pharmaceutical Co., LTD
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <a href="https://cuore-beauty.co.jp/kinoshita/" target="_blank" rel="noopener noreferrer" className="text-rose-600 hover:underline">
+                  연구개발: 기노시다제약
                 </a>
-              </p>
+              </h3>
+              <p className="text-gray-600 font-light">새로운 " 아름다움 " 과
+              " 건강함 " 의 창조</p>
             </div>
             
             <div className="text-center group">
               <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-rose-200 transition-colors duration-300">
-                <div className="w-8 h-8 bg-rose-600 rounded-full"></div>
+                <Sparkles size={32} className="text-rose-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">개인 맞춤</h3>
-              <p className="text-gray-600 font-light">각자의 피부에 맞는 맞춤형 케어를 제공합니다</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <a href="https://cuore-beauty.co.jp/kinoshita/factory" target="_blank" rel="noopener noreferrer" className="text-rose-600 hover:underline">
+                  공장·생산설비
+                </a>
+              </h3>
+              <p className="text-gray-600 font-light">충실한 제조 설비와 독자적인 품질 관리</p>
             </div>
             
             <div className="text-center group">
               <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-rose-200 transition-colors duration-300">
-                <div className="w-8 h-8 bg-rose-600 rounded-full"></div>
+                <ShieldCheck size={32} className="text-rose-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">전문 케어</h3>
-              <p className="text-gray-600 font-light">숙련된 전문가의 세심한 관리를 받으실 수 있습니다</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <a href="/products" target="_blank" rel="noopener noreferrer" className="text-rose-600 hover:underline">
+                  미용실 전매품
+                </a>
+              </h3>
+              <p className="text-gray-600 font-light">프로페셔널이 인정하는 퀄리티</p>
             </div>
           </div>
         </div>
