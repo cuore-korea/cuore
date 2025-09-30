@@ -1,46 +1,7 @@
-import React, { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Instagram, Facebook, MessageCircle, CheckCircle, AlertCircle } from 'lucide-react';
+import React from 'react';
+import { MapPin, Phone, Mail, Clock, Instagram, Facebook, MessageCircle } from 'lucide-react';
 
 const ContactStatic = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    service_interest: '',
-    message: ''
-  });
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Simple validation
-    if (!formData.name || !formData.email || !formData.message) {
-      alert('이름, 이메일, 메시지는 필수 입력 항목입니다.');
-      return;
-    }
-
-    // Show success message (in a real app, this would send to a server)
-    setShowSuccess(true);
-    setFormData({
-      name: '',
-      phone: '',
-      email: '',
-      service_interest: '',
-      message: ''
-    });
-
-    // Hide success message after 5 seconds
-    setTimeout(() => setShowSuccess(false), 5000);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
   return (
     <section id="contact" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,8 +28,8 @@ const ContactStatic = () => {
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-1">주소</h4>
                     <p className="text-gray-600">
-                      서울특별시 강남구 청담동 123-45<br />
-                      청담 뷰티 플라자 3층
+                      서울시 강남구 논현로157길 30 <br />
+                      꾸오레화장품 2층
                     </p>
                   </div>
                 </div>
@@ -79,7 +40,7 @@ const ContactStatic = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-1">전화번호</h4>
-                    <p className="text-gray-600">02-1234-5678</p>
+                    <p className="text-gray-600">(02) 553 – 6035</p>
                     <p className="text-sm text-gray-500">예약 및 상담 문의</p>
                   </div>
                 </div>
@@ -90,7 +51,7 @@ const ContactStatic = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-1">이메일</h4>
-                    <p className="text-gray-600">hello@cuore-beauty.co.kr</p>
+                    <p className="text-gray-600">cuore123@hanmail.net</p>
                     <p className="text-sm text-gray-500">24시간 내 답변</p>
                   </div>
                 </div>
@@ -102,9 +63,8 @@ const ContactStatic = () => {
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-1">운영 시간</h4>
                     <div className="text-gray-600 space-y-1">
-                      <p>월-금: 오전 10:00 - 오후 8:00</p>
-                      <p>토요일: 오전 10:00 - 오후 6:00</p>
-                      <p>일요일: 오후 1:00 - 오후 6:00</p>
+                      <p>월-금: 오전 09:00 - 오후 8:00</p>
+                      <p>토-일: 이메일을 남겨주세요</p>
                     </div>
                   </div>
                 </div>
@@ -137,120 +97,15 @@ const ContactStatic = () => {
             </div>
           </div>
 
-          {/* Contact Form */}
-          <div className="bg-gray-50 rounded-2xl p-8">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-6">문의하기</h3>
-            
-            {showSuccess && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3">
-                <CheckCircle size={20} className="text-green-600" />
-                <p className="text-green-700">문의가 접수되었습니다. 빠른 시일 내에 답변드리겠습니다.</p>
-              </div>
-            )}
-            
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    이름 *
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 transition-colors duration-200"
-                    placeholder="홍길동"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    전화번호
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 transition-colors duration-200"
-                    placeholder="010-1234-5678"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  이메일 *
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 transition-colors duration-200"
-                  placeholder="example@email.com"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="service_interest" className="block text-sm font-medium text-gray-700 mb-2">
-                  관심 서비스
-                </label>
-                <select
-                  id="service_interest"
-                  name="service_interest"
-                  value={formData.service_interest}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 transition-colors duration-200"
-                >
-                  <option value="">서비스를 선택해주세요</option>
-                  <option value="facial">프리미엄 페이셜 케어</option>
-                  <option value="lifting">골드 리프팅 테라피</option>
-                  <option value="hydration">아쿠아 하이드레이션</option>
-                  <option value="brightening">브라이트닝 케어</option>
-                  <option value="consultation">상담</option>
-                  <option value="other">기타</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                  메시지 *
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 transition-colors duration-200 resize-none"
-                  placeholder="궁금한 점이나 요청사항을 적어주세요..."
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-rose-600 text-white py-4 rounded-xl hover:bg-rose-700 transition-colors duration-200 font-medium"
-              >
-                문의 보내기
-              </button>
-            </form>
-          </div>
-        </div>
-
-        {/* Map placeholder */}
-        <div className="mt-16">
-          <div className="bg-gray-100 rounded-2xl h-64 flex items-center justify-center">
-            <div className="text-center">
-              <MapPin size={48} className="text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500">지도는 실제 구현 시 Google Maps 또는 Naver Map API를 연동합니다</p>
-            </div>
+          {/* Embedded Naver Map */}
+          <div className="rounded-2xl h-full overflow-hidden">
+            <iframe
+              src="https://naver.me/FpPoeX0p"
+              className="w-full h-full border-0"
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
           </div>
         </div>
       </div>

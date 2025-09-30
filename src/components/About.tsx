@@ -1,81 +1,76 @@
 import React from 'react';
 import { Award, Users, Heart, Sparkles } from 'lucide-react';
+import f1 from '../assets/f1.jpg';
+import f2 from '../assets/f2.jpg';
+import f3 from '../assets/f3.jpg';
 
 const About = () => {
   const stats = [
-    { number: '15+', label: '년의 경험', icon: Award },
-    { number: '50,000+', label: '만족한 고객', icon: Users },
+    { number: '60+', label: '년의 경험', icon: Award },
+    { number: '50,000+', label: '미용실 갯수', icon: Users },
     { number: '100%', label: '천연 성분', icon: Heart },
     { number: '20+', label: '프리미엄 제품', icon: Sparkles },
+  ];
+
+  const features = [
+    {
+      image: f1,
+      title: '직판 체제이기 때문에 친밀하고 신속한 서포트',
+      description: '판매 대리점 경유가 아니라 화장품 메이커인 꾸오레의 스탭이 직접 담당하기 때문에, 미용실의 곤란과 요망에 신속하게 응할 수 있습니다.',
+      number: '01',
+    },
+    {
+      image: f2,
+      title: '헤어 케어 + 스킨 케어 + 메이크업의 총 뷰티 제안',
+      description: '꾸오레의 미용실 전매품은 스킨 케어도 전개. 페이셜 에스테틱이나 핸드 마사지 등으로 메뉴의 확충도 할 수 있어 경쟁사와의 차별화로 연결됩니다.',
+      number: '02',
+    },
+    {
+      image: f3,
+      title: '꾸오레 전임의 미용 스탭에 의한 실천적인 강습',
+      description: '미용 기술과 지식을 가진 영업 프로모션 스탭(SP)이 마사지와 메이크업 기술, 매출로 이어지는 상점 노하우를 스탭 여러분께 직접 지도합니다.',
+      number: '03',
+    },
   ];
 
   return (
     <section id="about" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left content */}
-          <div>
-            <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
-              자연과 과학의
-              <span className="block text-rose-600">완벽한 조화</span>
-            </h2>
-            
-            <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-              큐어 뷰티는 자연에서 찾은 순수한 성분과 첨단 과학 기술을 결합하여 
-              피부 본연의 아름다움을 되찾아드리는 것을 목표로 합니다.
-            </p>
-
-            <div className="space-y-6 mb-10">
-              <div className="flex items-start gap-4">
-                <div className="w-6 h-6 bg-rose-600 rounded-full flex-shrink-0 mt-1"></div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">자연 친화적 성분</h4>
-                  <p className="text-gray-600">
-                    화학 성분 대신 자연에서 추출한 순수한 원료만을 사용합니다
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="w-6 h-6 bg-rose-600 rounded-full flex-shrink-0 mt-1"></div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">과학적 검증</h4>
-                  <p className="text-gray-600">
-                    모든 제품은 피부과학 연구를 통해 안전성과 효능이 입증되었습니다
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="w-6 h-6 bg-rose-600 rounded-full flex-shrink-0 mt-1"></div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">맞춤형 케어</h4>
-                  <p className="text-gray-600">
-                    개인의 피부 타입과 고민에 맞는 맞춤형 솔루션을 제공합니다
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <button className="bg-rose-600 text-white px-8 py-4 rounded-full hover:bg-rose-700 transition-colors duration-200 font-medium">
-              브랜드 스토리 더보기
-            </button>
-          </div>
-
-          {/* Right image */}
+        {/* Title Section */}
+        <div className="text-center mb-20 relative">
+          <h1 className="text-8xl md:text-9xl font-extrabold text-gray-100 absolute inset-0 flex items-center justify-center" style={{ letterSpacing: '0.1em' }}>
+            TOTAL SUPPORT
+          </h1>
           <div className="relative">
-            <div className="relative z-10">
-              <img
-                src="https://images.pexels.com/photos/7755212/pexels-photo-7755212.jpeg"
-                alt="About Cuore Beauty"
-                className="w-full h-96 object-cover rounded-2xl shadow-2xl"
-              />
-            </div>
-            <div className="absolute -top-8 -right-8 w-full h-full bg-rose-100 rounded-2xl -z-10"></div>
+            <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
+              꾸오레이기 때문에 할 수 있는 일
+            </h2>
+            <p className="text-lg text-gray-600 max-w-4xl mx-auto">
+              꾸오레는 항상 미용실을 둘러싼 최신 동향을 분석하고 다양한 각도에서 미용실을 지원했습니다. 창업보다 축적한 노하우와 실적을 바탕으로 미용실의 과제를 발견하고 해결 방법을 함께 생각해 집객으로 이끌어 갑니다.
+            </p>
           </div>
         </div>
 
-        {/* Stats */}
+        {/* Features Section */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center mt-32">
+          {features.map((feature, index) => (
+            <div key={index} className="relative">
+              <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-10">
+                <div className="w-28 h-28 bg-indigo-900 text-white rounded-full flex flex-col items-center justify-center text-center p-2">
+                  <span className="text-xs leading-tight">꾸오레의<br/>총 지원</span>
+                  <span className="font-bold text-3xl mt-1">{feature.number}</span>
+                </div>
+              </div>
+              <div className="pt-12">
+                <img src={feature.image} alt={feature.title} className="w-full h-64 object-cover rounded-lg shadow-lg mb-6"/>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Stats Section */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 pt-20 border-t border-gray-100">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
