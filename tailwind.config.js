@@ -17,6 +17,9 @@ export default {
           900: '#7f1d1d',
         },
       },
+      fontFamily: {
+        'lato': ['"Lato"', 'sans-serif'],
+      },
     },
   },
   plugins: [],
