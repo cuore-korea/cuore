@@ -7,8 +7,8 @@ import f3 from '../assets/f3.jpg';
 const About = () => {
   const stats = [
     { number: '60+', label: '년의 경험', icon: Award },
-    { number: '50,000+', label: '미용실 갯수', icon: Users },
-    { number: '100%', label: '천연 성분', icon: Heart },
+    { number: '580+', label: '미용실 거래처수', icon: Users },
+    { number: '100%', label: '제품 지원', icon: Heart },
     { number: '20+', label: '프리미엄 제품', icon: Sparkles },
   ];
 

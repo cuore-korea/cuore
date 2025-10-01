@@ -1,0 +1,26 @@
+{
+    "id": "axi-scalp-care-cleansing-oil",
+    "mainCategory": "헤어케어 프로페셔널 시리즈",
+    "subCategory": "스컬프 어시스트 라인",
+    "tag": "추천 상품",
+    "name": "AXI 스칼프 케어 클렌징 오일",
+    "subtitle": "두피용 클렌징료",
+    "spec": "미용실 전매품 150mL / 2,750엔 (부가세 포함)",
+    "description": "씻기 전, 지피를 겸비한, 지피의 클렌징 오일",
+    "images": [
+      "main-product-image.jpg",
+      "thumbnail-1.jpg",
+      "thumbnail-2.jpg"
+    ],
+    "points": [
+      { "title": "포인트 01", "text": "수분으로 피부의 균형을 잡는다." },
+      { "title": "포인트 02", "text": "지피를 유연하게 마무리해, 쾌적한 지피를 유지한다" },
+      { "title": "포인트 03", "text": "5개의 식물 오일* 을 호화롭게 배합" },
+      { "title": "포인트 04", "text": "블러드 오렌지 향기" }
+    ],
+    "pointsFootnote": "※올리브 과실유, 효모 종자유, 스쿠알란, 아보카도유, 대두유(모두 보습 성분)",
+    "recommendations": "이런 분들에게 추천에 대한 상세 내용입니다...",
+    "features": "제품 특징에 대한 상세 내용입니다...",
+    "howToUse": "사용방법에 대한 상세 내용입니다...",
+    "ingredients": "성분 정보에 대한 상세 내용입니다..."
+  },

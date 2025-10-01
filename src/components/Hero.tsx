@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, FlaskConical, Sparkles, ShieldCheck } from 'lucide-react';
+import { ArrowRight, FlaskConical, Factory, ShieldCheck } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import slide1 from '../assets/_top_slide1_01.jpg';
 import slide2 from '../assets/_top_slide1_02.jpg';
@@ -34,14 +34,14 @@ const Hero = () => {
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
       {/* Decorative elements - reducing opacity */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-rose-100 rounded-full opacity-10 blur-3xl"></div>
-      <div className="absolute bottom-20 right-10 w-80 h-80 bg-pink-100 rounded-full opacity-10 blur-3xl"></div>
+      <div className="absolute top-20 left-10 w-64 h-64 bg-international-klein-blue-100 rounded-full opacity-10 blur-3xl"></div>
+      <div className="absolute bottom-20 right-10 w-80 h-80 bg-glaucous-100 rounded-full opacity-10 blur-3xl"></div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="max-w-5xl mx-auto bg-white/30 backdrop-blur-md rounded-2xl p-10 shadow-lg">
           <h1 className="font-lato text-5xl md:text-7xl text-white mb-6 uppercase italic">
             WILL CONTINUE
-            <span className="block text-rose-600">
+            <span className="block text-international-klein-blue animate-pulse">
               TO BE BEAUTIFUL.
             </span>
           </h1>
@@ -51,12 +51,12 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <button onClick={() => navigate('/products')} className="group bg-rose-600 text-white px-8 py-4 rounded-full hover:bg-rose-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2">
+            <button onClick={() => navigate('/products')} className="group bg-international-klein-blue text-white px-8 py-4 rounded-full hover:bg-international-klein-blue-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2">
               제품 둘러보기
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform duration-200" />
             </button>
             
-            <button className="border-2 border-white text-white px-8 py-4 rounded-full hover:border-rose-600 hover:text-rose-600 transition-all duration-300 transform hover:scale-105">
+            <button className="border-2 border-white text-white px-8 py-4 rounded-full hover:border-international-klein-blue hover:text-international-klein-blue transition-all duration-300 transform hover:scale-105">
               상담 예약하기
             </button>
           </div>
@@ -65,10 +65,10 @@ const Hero = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
             <div className="text-center group">
               <div className="w-16 h-16 bg-white/40 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/50 transition-colors duration-300">
-                <FlaskConical size={32} className="text-rose-600" />
+                <FlaskConical size={32} className="text-international-klein-blue" />
               </div>
               <h3 className="text-lg font-medium text-white mb-2">
-                <a href="https://cuore-beauty.co.jp/kinoshita/" target="_blank" rel="noopener noreferrer" className="text-rose-600 hover:underline">
+                <a href="https://cuore-beauty.co.jp/kinoshita/" target="_blank" rel="noopener noreferrer" className="text-international-klein-blue hover:underline">
                   연구개발: 기노시다제약
                 </a>
               </h3>
@@ -78,10 +78,10 @@ const Hero = () => {
             
             <div className="text-center group">
               <div className="w-16 h-16 bg-white/40 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/50 transition-colors duration-300">
-                <Sparkles size={32} className="text-rose-600" />
+                <Factory size={32} className="text-international-klein-blue" />
               </div>
               <h3 className="text-lg font-medium text-white mb-2">
-                <a href="https://cuore-beauty.co.jp/kinoshita/factory" target="_blank" rel="noopener noreferrer" className="text-rose-600 hover:underline">
+                <a href="https://cuore-beauty.co.jp/kinoshita/factory" target="_blank" rel="noopener noreferrer" className="text-international-klein-blue hover:underline">
                   공장·생산설비
                 </a>
               </h3>
@@ -90,10 +90,10 @@ const Hero = () => {
             
             <div className="text-center group">
               <div className="w-16 h-16 bg-white/40 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/50 transition-colors duration-300">
-                <ShieldCheck size={32} className="text-rose-600" />
+                <ShieldCheck size={32} className="text-international-klein-blue" />
               </div>
               <h3 className="text-lg font-medium text-white mb-2">
-                <Link to="/products" className="text-rose-600 hover:underline">
+                <Link to="/products" className="text-international-klein-blue hover:underline">
                   미용실 전매품
                 </Link>
               </h3>
