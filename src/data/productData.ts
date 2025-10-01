@@ -71,7 +71,7 @@ export const products = [
     "name": "AXI 사이트 UV 베일 RF",
     "description": "부드럽게 녹는 베일 같은 작용감으로, 자외선이나 낮의 건조로부터 피부를 보호합니다.",
     "spec": "60g",
-    "imageUrl": "RF_site_uv_veil.jpg"
+    "imageUrl": "sk-refresh-3.png"
   },
   {
     "id": "sk-refresh-4",
@@ -81,7 +81,7 @@ export const products = [
     "name": "AXI 리퀴어 샤워 RF-a",
     "description": "슈트와 사람 형상의 탄산수를 담은 수분 미스트",
     "spec": "85g",
-    "imageUrl": "RF_requir_shower.jpg"
+    "imageUrl": "sk-refresh-4.png"
   },
   {
     "id": "sk-refresh-5",
