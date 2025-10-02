@@ -122,9 +122,12 @@ const ProductsPage = () => {
                           <div key={product.id} className="flex items-start gap-4">
                             <div className="w-1/3 flex-shrink-0">
                               <img 
-                                src={`https://via.placeholder.com/200x200.png/f0f0f0/333333?text=${product.name.substring(0, 10)}`} 
+                                src={`/products/${product.id}.png`} 
                                 alt={product.name} 
                                 className="w-full h-auto object-cover border"
+                                onError={(e) => {
+                                  e.currentTarget.src = `https://via.placeholder.com/200x200.png/f0f0f0/333333?text=${product.name.substring(0, 10)}`;
+                                }}
                               />
                             </div>
                             <div className="w-2/3">
