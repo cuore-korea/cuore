@@ -3,66 +3,66 @@ export const products = [
   // ============================
   // 스킨케어 프로페셔널 시리즈
   // ============================
-  {
-    "id": "sk-bright-1",
-    "mainCategory": "스킨케어 프로페셔널 시리즈",
-    "subCategory": "브라이트닝 시리즈",
-    "tag": "보습",
-    "name": "AXI 비키아 크림 AR+",
-    "description": "풍부하고 농밀한 텍스처가 피부를 촉촉하게 감싼다. 천연의 피부에 침투하고 유효 성분을 전달합니다.",
-    "spec": "의약부외품 35g",
-    "imageUrl": "VIKIA_cream.jpg"
-  },
-  {
-    "id": "sk-bright-2",
-    "mainCategory": "스킨케어 프로페셔널 시리즈",
-    "subCategory": "브라이트닝 시리즈",
-    "tag": "보습",
-    "name": "AXI 비키아 로션 AR+",
-    "description": "피부를 때 풀어지는 천연의 침투. 각종의 구석구석에 촉촉함으로 채워, 빨아들이는 듯한 피부에.",
-    "spec": "의약부외품 200mL",
-    "imageUrl": "VIKIA_lotion.jpg"
-  },
-   {
-    "id": "sk-bright-3",
-    "mainCategory": "스킨케어 프로페셔널 시리즈",
-    "subCategory": "브라이트닝 시리즈",
-    "tag": "보습",
-    "name": "AXI 비키아 에멀젼 AR+",
-    "description": "강질의 피부를 부드럽게 정돈해주는 조화. 피부를 통해 스며들어 부드러운 탄력 피부로 이끌어줍니다.",
-    "spec": "의약부외품 80mL",
-    "imageUrl": "VIKIA_emulsion.jpg"
-  },
-  {
-    "id": "sk-bright-4",
-    "mainCategory": "스킨케어 프로페셔널 시리즈",
-    "subCategory": "브라이트닝 시리즈",
-    "tag": "세안료",
-    "name": "AXI 비키아 워시",
-    "description": "탄탄한 거품으로 불필요한 투명한 피부를 목표로 합니다.",
-    "spec": "의약부외품 100g",
-    "imageUrl": "VIKIA_wash.jpg"
-  },
-  {
-    "id": "sk-refresh-1",
-    "mainCategory": "스킨케어 프로페셔널 시리즈",
-    "subCategory": "리프레시 시리즈",
-    "tag": "유액",
-    "name": "AXI 무스 에멀젼 RF",
-    "description": "녹는 거품 모양의 미용 유액",
-    "spec": "80g",
-    "imageUrl": "RF_moose_emulsion.jpg"
-  },
-  {
-    "id": "sk-refresh-2",
-    "mainCategory": "스킨케어 프로페셔널 시리즈",
-    "subCategory": "리프레시 시리즈",
-    "tag": "화장수",
-    "name": "AXI 토닝 로션 RF",
-    "description": "각질 각층 개선",
-    "spec": "150g",
-    "imageUrl": "RF_toning_lotion.jpg"
-  },
+  // {
+  //   "id": "sk-bright-1",
+  //   "mainCategory": "스킨케어 프로페셔널 시리즈",
+  //   "subCategory": "브라이트닝 시리즈",
+  //   "tag": "보습",
+  //   "name": "AXI 비키아 크림 AR+",
+  //   "description": "풍부하고 농밀한 텍스처가 피부를 촉촉하게 감싼다. 천연의 피부에 침투하고 유효 성분을 전달합니다.",
+  //   "spec": "의약부외품 35g",
+  //   "imageUrl": "VIKIA_cream.jpg"
+  // },
+  // {
+  //   "id": "sk-bright-2",
+  //   "mainCategory": "스킨케어 프로페셔널 시리즈",
+  //   "subCategory": "브라이트닝 시리즈",
+  //   "tag": "보습",
+  //   "name": "AXI 비키아 로션 AR+",
+  //   "description": "피부를 때 풀어지는 천연의 침투. 각종의 구석구석에 촉촉함으로 채워, 빨아들이는 듯한 피부에.",
+  //   "spec": "의약부외품 200mL",
+  //   "imageUrl": "VIKIA_lotion.jpg"
+  // },
+  // {
+  //   "id": "sk-bright-3",
+  //   "mainCategory": "스킨케어 프로페셔널 시리즈",
+  //   "subCategory": "브라이트닝 시리즈",
+  //   "tag": "보습",
+  //   "name": "AXI 비키아 에멀젼 AR+",
+  //   "description": "강질의 피부를 부드럽게 정돈해주는 조화. 피부를 통해 스며들어 부드러운 탄력 피부로 이끌어줍니다.",
+  //   "spec": "의약부외품 80mL",
+  //   "imageUrl": "VIKIA_emulsion.jpg"
+  // },
+  // {
+  //   "id": "sk-bright-4",
+  //   "mainCategory": "스킨케어 프로페셔널 시리즈",
+  //   "subCategory": "브라이트닝 시리즈",
+  //   "tag": "세안료",
+  //   "name": "AXI 비키아 워시",
+  //   "description": "탄탄한 거품으로 불필요한 투명한 피부를 목표로 합니다.",
+  //   "spec": "의약부외품 100g",
+  //   "imageUrl": "VIKIA_wash.jpg"
+  // },
+  // {
+  //   "id": "sk-refresh-1",
+  //   "mainCategory": "스킨케어 프로페셔널 시리즈",
+  //   "subCategory": "리프레시 시리즈",
+  //   "tag": "유액",
+  //   "name": "AXI 무스 에멀젼 RF",
+  //   "description": "녹는 거품 모양의 미용 유액",
+  //   "spec": "80g",
+  //   "imageUrl": "RF_moose_emulsion.jpg"
+  // },
+  // {
+  //   "id": "sk-refresh-2",
+  //   "mainCategory": "스킨케어 프로페셔널 시리즈",
+  //   "subCategory": "리프레시 시리즈",
+  //   "tag": "화장수",
+  //   "name": "AXI 토닝 로션 RF",
+  //   "description": "각질 각층 개선",
+  //   "spec": "150g",
+  //   "imageUrl": "RF_toning_lotion.jpg"
+  // },
   {
     "id": "sk-refresh-3",
     "mainCategory": "스킨케어 프로페셔널 시리즈",
