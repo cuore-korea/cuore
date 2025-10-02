@@ -124,7 +124,10 @@ const ProductsPage = () => {
                               <img 
                                 src={`/products/${product.id}.png`} 
                                 alt={product.name} 
-                                className="w-full h-auto object-cover border"
+                                className="w-full h-auto object-cover"
+                                style={{
+                                  transform: product.id === 'sk-premium-1' ? 'scale(1.25)' : product.id === 'sk-premium-2' ? 'scale(0.8)' : 'none'
+                                }}
                                 onError={(e) => {
                                   e.currentTarget.src = `https://via.placeholder.com/200x200.png/f0f0f0/333333?text=${product.name.substring(0, 10)}`;
                                 }}
