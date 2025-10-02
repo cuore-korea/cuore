@@ -62,7 +62,7 @@ export const products = [
     "mainCategory": "스킨케어 프로페셔널 시리즈",
     "subCategory": "리프레시 시리즈",
     "tag": "자외선 차단",
-    "name": "AXI 사이트 UV 베일 RF",
+    "name": "AXI 화이트닝 UV 베일 RF",
     "description": "부드럽게 녹는 베일 같은 작용감으로, 자외선이나 낮의 건조로부터 피부를 보호합니다.",
     "spec": "60g",
   },
@@ -71,8 +71,8 @@ export const products = [
     "mainCategory": "스킨케어 프로페셔널 시리즈",
     "subCategory": "리프레시 시리즈",
     "tag": "화장수",
-    "name": "AXI 리퀴어 샤워 RF-a",
-    "description": "슈트와 사람 형상의 탄산수를 담은 수분 미스트",
+    "name": "AXI 스파쿨링 아쿠아 미스트",
+    "description": "슈트와 사람 형상의 탄산수를 담은 수분 미스트 \n 수도물의 염소를 2초만에 완벽 제거",
     "spec": "85g",
   },
   // {
@@ -125,7 +125,7 @@ export const products = [
     "mainCategory": "스킨케어 프로페셔널 시리즈",
     "subCategory": "퍼스널 케어 (데일리 유스)",
     "tag": "크림",
-    "name": "AXI 수리 큐어 크림",
+    "name": "AXI 리페어큐어 크림",
     "description": "2종의 오일 이 수분을 스미즈미까지 채운다 ※카리오덴드론오리노센세씨유, 푸르케네티아 보르빌리스씨유(모두 보습 성분)",
     "spec": "30g"
   },
@@ -134,7 +134,7 @@ export const products = [
     "mainCategory": "스킨케어 프로페셔널 시리즈",
     "subCategory": "퍼스널 케어 (데일리 유스)",
     "tag": "유액",
-    "name": "AXI 수리 큐어 우유",
+    "name": "AXI 리페어큐어 우유",
     "description": "튀는듯한 동동 피부에",
     "spec": "60mL"
   },
@@ -143,7 +143,7 @@ export const products = [
     "mainCategory": "스킨케어 프로페셔널 시리즈",
     "subCategory": "퍼스널 케어 (데일리 유스)",
     "tag": "화장수",
-    "name": "AXI 수리 큐어 로션",
+    "name": "AXI 리페어큐어 로션",
     "description": "미즈미즈시 언제까지나 계속",
     "spec": "200mL"
   },
@@ -161,7 +161,7 @@ export const products = [
     "mainCategory": "스킨케어 프로페셔널 시리즈",
     "subCategory": "퍼스널 케어 (데일리 유스)",
     "tag": "세안료",
-    "name": "AXI 수리 큐어 워시",
+    "name": "AXI 리페어큐어 워시",
     "description": "수분을 지키면서 씻는다.",
     "spec": "100g"
   },
@@ -215,7 +215,7 @@ export const products = [
     "mainCategory": "스킨케어 프로페셔널 시리즈",
     "subCategory": "퍼스널 케어 (스페셜 유스)",
     "tag": "스킨케어 기타",
-    "name": "AXI 에센셜 시트 마스크 TC",
+    "name": "AXI 에센셜 마스크 TC",
     "description": "채워지는 피부에",
     "spec": "30mL x 6장"
   },

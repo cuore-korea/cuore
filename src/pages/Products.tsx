@@ -69,17 +69,10 @@ const ProductsPage = () => {
                         <h3 className="text-xl font-light text-international-klein-blue mb-6 tracking-widest">
                             <a href="#스킨케어-프로페셔널-시리즈">› 스킨케어 프로페셔널 시리즈</a>
                         </h3>
-                        <div className="grid grid-cols-2 gap-x-8 text-sm">
-                            <div className="space-y-3">
-                                {skincareSubCategories.slice(0, Math.ceil(skincareSubCategories.length / 2)).map(subCat => (
-                                     <p key={subCat}><a href={`#${subCat.replace(/\s+/g, '-').toLowerCase()}`} className="text-gray-700 hover:text-purple-900">› {subCat}</a></p>
-                                ))}
-                            </div>
-                            <div className="space-y-3">
-                                {skincareSubCategories.slice(Math.ceil(skincareSubCategories.length / 2)).map(subCat => (
-                                     <p key={subCat}><a href={`#${subCat.replace(/\s+/g, '-').toLowerCase()}`} className="text-gray-700 hover:text-purple-900">› {subCat}</a></p>
-                                ))}
-                            </div>
+                        <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
+                            {skincareSubCategories.map(subCat => (
+                                 <p key={subCat}><a href={`#${subCat.replace(/\s+/g, '-').toLowerCase()}`} className="text-gray-700 hover:text-purple-900">› {subCat}</a></p>
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -89,12 +82,10 @@ const ProductsPage = () => {
                         <h3 className="text-xl font-light text-international-klein-blue mb-6 tracking-widest">
                             <a href="#헤어케어-프로페셔널-시리즈">› 헤어케어 프로페셔널 시리즈</a>
                         </h3>
-                        <div className="grid grid-cols-2 gap-x-8 text-sm">
-                            <div className="space-y-3">
-                                {haircareSubCategories.map(subCat => (
-                                     <p key={subCat}><a href={`#${subCat.replace(/\s+/g, '-').toLowerCase()}`} className="text-gray-700 hover:text-purple-900">› {subCat}</a></p>
-                                ))}
-                            </div>
+                        <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
+                            {haircareSubCategories.map(subCat => (
+                                 <p key={subCat}><a href={`#${subCat.replace(/\s+/g, '-').toLowerCase()}`} className="text-gray-700 hover:text-purple-900">› {subCat}</a></p>
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -102,24 +93,24 @@ const ProductsPage = () => {
         </div>
         
         {/* Main Product Grid Section */}
-        <div className="py-16">
+        <div className="py-8">
             {Object.entries(productsByMainCategory).map(([mainCategory, mainCategoryProducts]) => {
               const productsBySubCategory = groupByKey(mainCategoryProducts, 'subCategory');
               const englishTitle = mainCategory === '스킨케어 프로페셔널 시리즈' ? 'SKINCARE PROFESSIONAL series' : 'HAIRCARE PROFESSIONAL series';
 
               return (
-                <section key={mainCategory} id={mainCategory.replace(/\s+/g, '-').toLowerCase()} className="mb-16 scroll-mt-20">
-                  <div className="pb-4 mb-8 border-b border-international-klein-blue flex justify-between items-baseline">
+                <section key={mainCategory} id={mainCategory.replace(/\s+/g, '-').toLowerCase()} className="mb-8 scroll-mt-20">
+                  <div className="pb-4 mb-4 flex justify-between items-baseline">
                     <h2 className="text-2xl font-semibold text-international-klein-blue tracking-wider">{mainCategory}</h2>
                     <span className="text-base font-light text-international-klein-blue tracking-widest">{englishTitle}</span>
                   </div>
 
                   {Object.entries(productsBySubCategory).map(([subCategory, subCategoryProducts]) => (
-                    <div key={subCategory} id={subCategory.replace(/\s+/g, '-').toLowerCase()} className="mb-12 scroll-mt-20">
-                      <h3 className="text-xl font-normal text-blue-600 mb-6">{subCategory}</h3>
+                    <div key={subCategory} id={subCategory.replace(/\s+/g, '-').toLowerCase()} className="mb-12 scroll-mt-20 border-t-2 border-international-klein-blue pt-8">
+                      <h3 className="text-xl font-semibold text-blue-600 mb-6">{subCategory}</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
                         {subCategoryProducts.map((product) => (
-                          <div key={product.id} className="flex items-start gap-4">
+                          <div key={product.id} className="group relative flex items-start gap-4 pb-5">
                             <div className="w-1/3 flex-shrink-0">
                               <img 
                                 src={`/products/${product.id}.png`} 
@@ -136,9 +127,11 @@ const ProductsPage = () => {
                             <div className="w-2/3">
                               <span className="inline-block bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded mb-2">{product.tag}</span>
                               <h4 className="text-md font-semibold text-gray-800 mb-1">{product.name}</h4>
-                              <p className="text-sm text-gray-600 leading-relaxed mb-2">{product.description}</p>
+                              <p className="text-sm text-gray-600 leading-relaxed mb-2 whitespace-pre-line">{product.description}</p>
                               <p className="text-xs text-gray-500">{product.spec}</p>
                             </div>
+                            <div className="absolute bottom-0 left-0 h-[1px] w-full bg-gray-300"></div>
+                            <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-international-klein-blue transition-all duration-300 group-hover:w-full"></div>
                           </div>
                         ))}
                       </div>
