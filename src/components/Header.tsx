@@ -18,9 +18,11 @@ const Header = () => {
     }
   }, [location]);
 
+  // 3군으로 나누어진 제품 카테고리 적용
   const productCategories = [
-    { name: '스킨케어', path: '/products#skincare' },
-    { name: '헤어케어', path: '/products#haircare' },
+    { name: '헤드스파 제품', path: '/products' },
+    { name: '헤어제품', path: '/products' },
+    { name: '스킨케어', path: '/products' },
   ];
 
   return (
@@ -69,6 +71,7 @@ const Header = () => {
               </div>
             </div>
 
+            {/* 복구된 브랜드, 서비스, 연락처 탭 */}
             <a href="/#about" className="text-gray-700 hover:text-rose-600 transition-colors duration-200 font-light">
               브랜드
             </a>
@@ -125,6 +128,7 @@ const Header = () => {
                 </div>
               </div>
 
+              {/* 모바일 메뉴에도 복구 완료 */}
               <a href="/#about" onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-rose-600 font-light">
                 브랜드
               </a>

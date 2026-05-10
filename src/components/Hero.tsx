@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, FlaskConical, Factory, ShieldCheck } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { ShieldCheck, Factory, FlaskConical } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import slide1 from '../assets/_top_slide1_01.jpg';
 import slide2 from '../assets/_top_slide1_02.jpg';
 import slide3 from '../assets/_top_slide1_03.jpg';
@@ -8,96 +8,77 @@ import slide3 from '../assets/_top_slide1_03.jpg';
 const images = [slide1, slide2, slide3];
 
 const Hero = () => {
-  const navigate = useNavigate();
   const [currentImage, setCurrentImage] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentImage((prevImage) => (prevImage + 1) % images.length);
-    }, 5000); // Change image every 5 seconds
+    }, 5000);
 
     return () => clearInterval(timer);
   }, []);
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Slideshow Background */}
-      {images.map((image, index) => (
+      {images.map((img, index) => (
         <div
           key={index}
-          className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ease-in-out ${index === currentImage ? 'opacity-100' : 'opacity-0'}`}
-          style={{ backgroundImage: `url(${image})` }}
-        />
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            index === currentImage ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <div className="absolute inset-0 bg-black/40 z-10" />
+          <img
+            src={img}
+            alt={`Slide ${index + 1}`}
+            className="w-full h-full object-cover"
+          />
+        </div>
       ))}
-      
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black opacity-50"></div>
 
-      {/* Decorative elements - reducing opacity */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-international-klein-blue-100 rounded-full opacity-10 blur-3xl"></div>
-      <div className="absolute bottom-20 right-10 w-80 h-80 bg-glaucous-100 rounded-full opacity-10 blur-3xl"></div>
+      <div className="relative z-20 text-center px-4 max-w-5xl mx-auto mt-20">
+        <span className="inline-block py-1 px-3 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-semibold tracking-wider mb-6 border border-white/30">
+          SINCE 1965
+        </span>
+        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight leading-tight">
+          미용실 점판의 개척기업<br />
+          <span className="text-blue-300">꾸오레 화장품</span>
+        </h1>
+        <p className="text-xl text-gray-200 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+          1965년 창업 이래 인터넷 판매를 하지 않고 오직 미용 프로에게만 제품을 유통합니다. 기노시다 제약의 기술력으로 안심하고 사용할 수 있는 제품을 만듭니다.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            to="/products"
+            className="px-8 py-4 bg-international-klein-blue text-white font-medium rounded-full hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          >
+            제품 전체보기
+          </Link>
+        </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="max-w-5xl mx-auto bg-white/30 backdrop-blur-md rounded-2xl p-10 shadow-lg">
-          <h1 className="font-lato text-5xl md:text-7xl text-white mb-6 uppercase italic">
-            WILL CONTINUE
-            <span className="block text-international-klein-blue animate-pulse">
-              TO BE BEAUTIFUL.
-            </span>
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-gray-200 mb-8 font-light max-w-2xl mx-auto leading-relaxed">
-            전문 헤어케어 & 스킨케어
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <button onClick={() => navigate('/products')} className="group bg-international-klein-blue text-white px-8 py-4 rounded-full hover:bg-international-klein-blue-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2">
-              제품 둘러보기
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform duration-200" />
-            </button>
-            
-            <button className="border-2 border-white text-white px-8 py-4 rounded-full hover:border-international-klein-blue hover:text-international-klein-blue transition-all duration-300 transform hover:scale-105">
-              상담 예약하기
-            </button>
-          </div>
-
-          {/* Features */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+        <div className="mt-20 pt-10 border-t border-white/20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center group">
-              <div className="w-16 h-16 bg-white/40 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/50 transition-colors duration-300">
-                <FlaskConical size={32} className="text-international-klein-blue" />
+              <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/20 transition-colors duration-300">
+                <FlaskConical size={32} className="text-blue-300" />
               </div>
-              <h3 className="text-lg font-medium text-white mb-2">
-                <a href="https://cuore-beauty.co.jp/kinoshita/" target="_blank" rel="noopener noreferrer" className="text-international-klein-blue hover:underline">
-                  연구개발: 기노시다제약
-                </a>
-              </h3>
-              <p className="text-gray-200 font-light">새로운 " 아름다움 " 과
-              " 건강함 " 의 창조</p>
+              <h3 className="text-lg font-medium text-white mb-2">60년 연구 및 개발</h3>
+              <p className="text-gray-300 font-light text-sm">노화방지, 탈모, 미백 연구</p>
             </div>
-            
             <div className="text-center group">
-              <div className="w-16 h-16 bg-white/40 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/50 transition-colors duration-300">
-                <Factory size={32} className="text-international-klein-blue" />
+              <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/20 transition-colors duration-300">
+                <Factory size={32} className="text-blue-300" />
               </div>
-              <h3 className="text-lg font-medium text-white mb-2">
-                <a href="https://cuore-beauty.co.jp/kinoshita/factory" target="_blank" rel="noopener noreferrer" className="text-international-klein-blue hover:underline">
-                  공장·생산설비
-                </a>
-              </h3>
-              <p className="text-gray-200 font-light">충실한 제조 설비와 독자적인 품질 관리</p>
+              <h3 className="text-lg font-medium text-white mb-2">기노시다 제약 제조</h3>
+              <p className="text-gray-300 font-light text-sm">제약회사가 만드는 안심/안전</p>
             </div>
-            
             <div className="text-center group">
-              <div className="w-16 h-16 bg-white/40 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/50 transition-colors duration-300">
-                <ShieldCheck size={32} className="text-international-klein-blue" />
+              <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/20 transition-colors duration-300">
+                <ShieldCheck size={32} className="text-blue-300" />
               </div>
-              <h3 className="text-lg font-medium text-white mb-2">
-                <Link to="/products" className="text-international-klein-blue hover:underline">
-                  미용실 전매품
-                </Link>
-              </h3>
-              <p className="text-gray-200 font-light">프로페셔널이 인정하는 퀄리티와 지원</p>
+              <h3 className="text-lg font-medium text-white mb-2">100% 미용실 전매</h3>
+              <p className="text-gray-300 font-light text-sm">인터넷 판매 금지 원칙</p>
             </div>
           </div>
         </div>
