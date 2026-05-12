@@ -79,21 +79,31 @@ const Footer = () => {
           {/* Contact Info */}
           <div>
             <h4 className="text-lg font-medium mb-4">연락처</h4>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex items-start gap-3">
                 <MapPin size={16} className="text-rose-400 mt-1 flex-shrink-0" />
-                <span className="text-gray-300 text-sm">
+                <span className="text-gray-300 text-sm leading-relaxed">
                   서울시 강남구 논현로157길 30 <br />
                   꾸오레화장품 2층
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <Phone size={16} className="text-rose-400" />
-                <span className="text-gray-300 text-sm">(02) 553 – 6035</span>
+                <Phone size={16} className="text-rose-400 flex-shrink-0" />
+                <a 
+                  href="tel:02-553-6035" 
+                  className="text-gray-300 text-sm hover:text-white hover:underline transition-all duration-200 block w-full py-1"
+                >
+                  (02) 553 – 6035
+                </a>
               </div>
               <div className="flex items-center gap-3">
-                <Mail size={16} className="text-rose-400" />
-                <span className="text-gray-300 text-sm">cuore123@hanmail.net</span>
+                <Mail size={16} className="text-rose-400 flex-shrink-0" />
+                <a 
+                  href="mailto:cuore123@hanmail.net" 
+                  className="text-gray-300 text-sm hover:text-white hover:underline transition-all duration-200 block w-full py-1"
+                >
+                  cuore123@hanmail.net
+                </a>
               </div>
             </div>
           </div>
