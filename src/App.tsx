@@ -1,35 +1,25 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import ProductsPage from './pages/Products.tsx';
-import HomePage from './pages/HomePage.tsx';
+import HomePage from './pages/HomePage';
+import ProductsPage from './pages/Products';
+// 1. 방금 만든 공지사항 페이지 임포트
+import NoticesPage from './pages/NoticesPage'; 
 
-const ScrollToAnchor = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    if (location.hash) {
-      const element = document.getElementById(location.hash.substring(1));
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  }, [location]);
-
-  return null;
-};
-
-const App = () => {
+function App() {
   return (
     <Router>
-      <Header />
-      <ScrollToAnchor />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/products" element={<ProductsPage />} />
-      </Routes>
+      <div className="min-h-screen bg-white">
+        <Header />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          {/* 2. 공지사항 라우트 추가 */}
+          <Route path="/notices" element={<NoticesPage />} />
+        </Routes>
+      </div>
     </Router>
   );
-};
+}
 
 export default App;

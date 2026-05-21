@@ -31,22 +31,23 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="products" className="text-gray-300 hover:text-rose-400 transition-colors duration-200">
+                <a href="/products" className="text-gray-300 hover:text-rose-400 transition-colors duration-200">
                   제품
                 </a>
               </li>
               <li>
-                <a href="about" className="text-gray-300 hover:text-rose-400 transition-colors duration-200">
+                <a href="/#about" className="text-gray-300 hover:text-rose-400 transition-colors duration-200">
                   브랜드
                 </a>
               </li>
+              {/* 공지사항 링크 추가됨 */}
               <li>
-                <a href="services" className="text-gray-300 hover:text-rose-400 transition-colors duration-200">
-                  서비스
+                <a href="/notices" className="text-gray-300 hover:text-rose-400 transition-colors duration-200">
+                  공지
                 </a>
               </li>
               <li>
-                <a href="contact" className="text-gray-300 hover:text-rose-400 transition-colors duration-200">
+                <a href="/#contact" className="text-gray-300 hover:text-rose-400 transition-colors duration-200">
                   연락처
                 </a>
               </li>
